@@ -8,3 +8,4 @@ npm-debug.log
 /.cache/
 *.js
 *.bs.js
+!webpack.config.js
