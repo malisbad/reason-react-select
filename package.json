@@ -18,10 +18,10 @@
     "parcel-bundler": "^1.6.2",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
-    "reason-react": ">=0.3.0"
+    "reason-react": "^0.4.2"
   },
   "devDependencies": {
-    "bs-platform": "^2.2.2",
+    "bs-platform": "^3.1.5",
     "webpack": "^3.8.1"
   }
 }
