@@ -1,8 +1,8 @@
 const path = require('path');
-const outputDir = path.join(__dirname, "build/");
+const outputDir = path.join(__dirname, "dist/");
 
 module.exports = {
-  entry: './src/Index.bs.js',
+  entry: './src/Index.js',
   output: {
     path: outputDir,
     publicPath: outputDir,
