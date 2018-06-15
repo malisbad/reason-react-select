@@ -117,7 +117,7 @@ let make = (
     reducer: (action, state) =>
       switch action {
       | ToggleList => ReasonReact.Update({ ...state, isHidden: !state.isHidden })
-      | Selected(selectedOption) => ReasonReact.Update({ ...state, selectedOption })
+      | Selected(selectedOption) => ReasonReact.Update({ ...state, selectedOption, isHidden: true })
       | UpdateFilter(filter) => ReasonReact.UpdateWithSideEffects(
           { ...state, filter },
           self => self.send(UpdateFilteredList(filterOptions(filter, self.state.options)))
@@ -130,7 +130,10 @@ let make = (
           displayText={self.state.selectedOption.displayText}
           onClick={self.handle(onDisplayClick)}
         />
-        <SelectInput handleChange={self.handle(onFilterChange)} isHidden={self.state.isHidden} />
+        <SelectInput
+          handleChange={self.handle(onFilterChange)}
+          isHidden={self.state.isHidden}
+        />
         <Options
           optionList={self.state.filteredList}
           onSelect={self.handle(onSelectOption)}
