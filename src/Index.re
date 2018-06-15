@@ -10,4 +10,6 @@ let testArray: Select.Options.t = [|
   }
 |];
 
-ReactDOMRe.renderToElementWithId(<Select optionsList={testArray} />, "index");
+let handleSelect = (selectedValue) => Js.log(selectedValue);
+
+ReactDOMRe.renderToElementWithId(<Select optionsList={testArray} onSelect={handleSelect} />, "index");

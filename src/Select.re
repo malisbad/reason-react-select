@@ -22,10 +22,10 @@ module Options = {
   type t = array(SelectOption.t);
 
   let component = ReasonReact.statelessComponent("Options");
-  let make = (~optionList: t, ~onSelect, _children) => {
+  let make = (~optionList: t, ~isHidden, ~onSelect, _children) => {
     ...component,
     render: (_self) => 
-    <div className="c-reason-select__option-list">
+    <div className="c-reason-select__option-list" hidden={isHidden} >
       (
         ReasonReact.array(
           Belt.Array.map(optionList, option => {
@@ -43,10 +43,10 @@ module Options = {
 
 module SelectDisplay = {
   let component = ReasonReact.statelessComponent("SelectDisplay");
-  let make = (~displayText="", _children) => {
+  let make = (~displayText="", ~onClick, _children) => {
     ...component,
     render: (_self) =>
-      <div className="c-reason-select__display-wrapper">
+      <div className="c-reason-select__display" onClick>
         {ReasonReact.string(displayText)}
       </div>
   };
@@ -54,10 +54,11 @@ module SelectDisplay = {
 
 module SelectInput = {
   let component = ReasonReact.statelessComponent("SelectInput");
-  let make = (~handleChange, _children) => {
+  let make = (~isHidden, ~handleChange, _children) => {
     ...component,
     render: (_self) =>
       <input
+        hidden={isHidden}
         className="c-reason-select__input"
         onChange={ev => handleChange(ReactDOMRe.domElementToObj(ReactEventRe.Form.target(ev))##value)}
       />
@@ -65,12 +66,14 @@ module SelectInput = {
 };
 
 type actions =
+  | ToggleList
   | Selected(SelectOption.t)
   | UpdateFilter(string)
   | UpdateFilteredList(Options.t)
   ;
   
 type state = {
+  isHidden: bool,
   options: Options.t,
   filteredList: Options.t,
   selectedOption: SelectOption.t,
@@ -83,7 +86,6 @@ let defaultOption: SelectOption.t = {
 };
 
 let filterOptions = (filter, options) => {
-  Js.log(filter);
   Belt.Array.keep(options: Options.t, option: bool => Js.String.includes(filter, option.displayText));
 };
 
@@ -100,9 +102,13 @@ let make = (
   let onFilterChange = (filter, self) => {
     self.ReasonReact.send(UpdateFilter(filter))
   };
+  let onDisplayClick = (_, self) => {
+    self.ReasonReact.send(ToggleList)
+  };
   {
     ...component,
     initialState: () => {
+      isHidden: true,
       options: optionsList,
       filteredList: optionsList,
       selectedOption: defaultOption,
@@ -110,6 +116,7 @@ let make = (
     },
     reducer: (action, state) =>
       switch action {
+      | ToggleList => ReasonReact.Update({ ...state, isHidden: !state.isHidden })
       | Selected(selectedOption) => ReasonReact.Update({ ...state, selectedOption })
       | UpdateFilter(filter) => ReasonReact.UpdateWithSideEffects(
           { ...state, filter },
@@ -119,11 +126,15 @@ let make = (
     },
     render: (self) =>
       <div className="c-reason-select">
-        <SelectDisplay displayText={self.state.selectedOption.displayText} />
-        <SelectInput handleChange={self.handle(onFilterChange)} />
+        <SelectDisplay
+          displayText={self.state.selectedOption.displayText}
+          onClick={self.handle(onDisplayClick)}
+        />
+        <SelectInput handleChange={self.handle(onFilterChange)} isHidden={self.state.isHidden} />
         <Options
           optionList={self.state.filteredList}
           onSelect={self.handle(onSelectOption)}
+          isHidden={self.state.isHidden}
         />
       </div>
   }
