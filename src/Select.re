@@ -9,7 +9,7 @@ module SelectOption = {
       ...component,
       render: (_self) => {
           <div
-            className="c-reason-select__option"
+            className="o-reason-select__option"
             onClick={_ev => handleClick(option)}  
           >
             {ReasonReact.string(option.displayText)}
@@ -25,7 +25,7 @@ module Options = {
   let make = (~optionList: t, ~isHidden, ~onSelect, _children) => {
     ...component,
     render: (_self) => 
-    <div className="c-reason-select__option-list" hidden={isHidden} >
+    <div className="o-reason-select__option-list" hidden={isHidden} >
       (
         ReasonReact.array(
           Belt.Array.map(optionList, option => {
@@ -46,7 +46,7 @@ module SelectDisplay = {
   let make = (~displayText="", ~onClick, _children) => {
     ...component,
     render: (_self) =>
-      <div className="c-reason-select__display" onClick>
+      <div className="o-reason-select__display" onClick>
         {ReasonReact.string(displayText)}
       </div>
   };
@@ -59,7 +59,7 @@ module SelectInput = {
     render: (_self) =>
       <input
         hidden={isHidden}
-        className="c-reason-select__input"
+        className="o-reason-select__input"
         onChange={ev => handleChange(ReactDOMRe.domElementToObj(ReactEventRe.Form.target(ev))##value)}
       />
   };
@@ -125,7 +125,7 @@ let make = (
       | UpdateFilteredList(filteredList) => ReasonReact.Update({ ...state, filteredList })
     },
     render: (self) =>
-      <div className="c-reason-select">
+      <div className="o-reason-select">
         <SelectDisplay
           displayText={self.state.selectedOption.displayText}
           onClick={self.handle(onDisplayClick)}
