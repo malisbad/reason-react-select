@@ -42,25 +42,30 @@ module Options = {
 };
 
 module SelectDisplay = {
+  let defaultStyle = ReactDOMRe.Style.make(~alignItems="center", ~border="1px solid #a6a6a6", ~display="flex", ~height="50px", ~padding="5px 15px", ~width="100%", ());
+
   let component = ReasonReact.statelessComponent("SelectDisplay");
   let make = (~displayText="", ~onClick, _children) => {
     ...component,
     render: (_self) =>
-      <div className="o-reason-select__display" onClick>
+      <div className="o-reason-select__display" style={defaultStyle} onClick>
         {ReasonReact.string(displayText)}
       </div>
   };
 };
 
 module SelectInput = {
+  let defaultStyle = ReactDOMRe.Style.make(~alignItems="center", ~border="1px solid #a6a6a6", ~height="50px", ~padding="5px 15px", ~width="100%", ());
+
   let component = ReasonReact.statelessComponent("SelectInput");
   let make = (~isHidden, ~handleChange, _children) => {
     ...component,
     render: (_self) =>
       <input
-        hidden={isHidden}
         className="o-reason-select__input"
-        onChange={ev => handleChange(ReactDOMRe.domElementToObj(ReactEventRe.Form.target(ev))##value)}
+        onChange={ev => handleChange(ReactEvent.Form.target(ev)##value)}
+        style={defaultStyle}
+        hidden={isHidden}
       />
   };
 };
