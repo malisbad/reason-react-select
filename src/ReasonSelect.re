@@ -55,7 +55,7 @@ module SelectDisplay = {
 };
 
 module SelectInput = {
-  let defaultStyle = ReactDOMRe.Style.make(~alignItems="center", ~border="1px solid #a6a6a6", ~display="flex", ~height="50px", ~padding="5px 15px", ~width="100%", ());
+  let defaultStyle = ReactDOMRe.Style.make(~alignItems="center", ~border="1px solid #a6a6a6", ~height="50px", ~padding="5px 15px", ~width="100%", ());
 
   let component = ReasonReact.statelessComponent("SelectInput");
   let make = (~isHidden, ~handleChange, _children) => {
@@ -63,7 +63,7 @@ module SelectInput = {
     render: (_self) =>
       <input
         className="o-reason-select__input"
-        onChange={ev => handleChange(ReactDOMRe.domElementToObj(ReactEventRe.Form.target(ev))##value)}
+        onChange={ev => handleChange(ReactEvent.Form.target(ev)##value)}
         style={defaultStyle}
         hidden={isHidden}
       />
