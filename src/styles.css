@@ -1,0 +1,25 @@
+.o-reason-select {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.o-reason-select__display {
+    border: 1px solid #a6a6a6;
+    height: 50px;
+}
+
+.o-reason-select__input {
+    border: 1px solid #a6a6a6;
+    border-top: none;
+    height: 50px;
+}
+
+.o-reason-select__option-list {
+    max-height: 10em;
+    overflow-y: scroll;
+}
+
+.o-reason-select__option {
+    height: 2em;
+}

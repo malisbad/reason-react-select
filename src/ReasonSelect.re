@@ -5,11 +5,11 @@ module SelectOption = {
   };
 
   let component = ReasonReact.statelessComponent("SelectOption");
-  let make = (~option: t, ~handleClick, _children) => {
+  let make = (~option: t, ~handleClick, ~optionClassList, _children) => {
       ...component,
       render: (_self) => {
           <div
-            className="o-reason-select__option"
+            className={"o-reason-select__option" ++ optionClassList}
             onClick={_ev => handleClick(option)}  
           >
             {ReasonReact.string(option.displayText)}
@@ -22,15 +22,16 @@ module Options = {
   type t = array(SelectOption.t);
 
   let component = ReasonReact.statelessComponent("Options");
-  let make = (~optionList: t, ~isHidden, ~onSelect, _children) => {
+  let make = (~optionList: t, ~isHidden, ~onSelect, ~optionClassList, ~optionListClassList, _children) => {
     ...component,
     render: (_self) => 
-    <div className="o-reason-select__option-list" hidden={isHidden} >
+    <div className={"o-reason-select__option-list" ++ optionListClassList} hidden={isHidden} >
       (
         ReasonReact.array(
           Belt.Array.map(optionList, option => {
             <SelectOption
               option
+              optionClassList
               handleClick={onSelect} 
               key={option.value}
             />
@@ -42,29 +43,26 @@ module Options = {
 };
 
 module SelectDisplay = {
-  let defaultStyle = ReactDOMRe.Style.make(~alignItems="center", ~border="1px solid #a6a6a6", ~display="flex", ~height="50px", ~padding="5px 15px", ~width="100%", ());
-
   let component = ReasonReact.statelessComponent("SelectDisplay");
-  let make = (~displayText="", ~onClick, _children) => {
+  let make = (~displayText="", ~onClick, ~selectClassList, _children) => {
     ...component,
     render: (_self) =>
-      <div className="o-reason-select__display" style={defaultStyle} onClick>
+      <div className={"o-reason-select__display" ++ selectClassList}
+        onClick
+      >
         {ReasonReact.string(displayText)}
       </div>
   };
 };
 
 module SelectInput = {
-  let defaultStyle = ReactDOMRe.Style.make(~alignItems="center", ~border="1px solid #a6a6a6", ~height="50px", ~padding="5px 15px", ~width="100%", ());
-
   let component = ReasonReact.statelessComponent("SelectInput");
-  let make = (~isHidden, ~handleChange, _children) => {
+  let make = (~isHidden, ~handleChange, ~inputClassList, _children) => {
     ...component,
     render: (_self) =>
       <input
-        className="o-reason-select__input"
+        className={"o-reason-select__input" ++ inputClassList}
         onChange={ev => handleChange(ReactEvent.Form.target(ev)##value)}
-        style={defaultStyle}
         hidden={isHidden}
       />
   };
@@ -98,6 +96,10 @@ let component = ReasonReact.reducerComponent("Select");
 let make = (
     ~onSelect={(value) => Js.log(value)},
     ~optionsList=[||],
+    ~selectClassList="",
+    ~inputClassList="",
+    ~optionListClassList="",
+    ~optionClassList="",
     _children
   ) => {
   let onSelectOption = (selectedOption, self) => {
@@ -130,19 +132,23 @@ let make = (
       | UpdateFilteredList(filteredList) => ReasonReact.Update({ ...state, filteredList })
     },
     render: (self) =>
-      <div className="o-reason-select">
+      <div className={"o-reason-select" ++ selectClassList} >
         <SelectDisplay
           displayText={self.state.selectedOption.displayText}
           onClick={self.handle(onDisplayClick)}
+          selectClassList
         />
         <SelectInput
           handleChange={self.handle(onFilterChange)}
           isHidden={self.state.isHidden}
+          inputClassList
         />
         <Options
           optionList={self.state.filteredList}
           onSelect={self.handle(onSelectOption)}
           isHidden={self.state.isHidden}
+          optionClassList
+          optionListClassList
         />
       </div>
   }
