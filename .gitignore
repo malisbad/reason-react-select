@@ -9,3 +9,5 @@ npm-debug.log
 *.js
 *.bs.js
 !webpack.config.js
+/src/Index.re
+/src/index.html
